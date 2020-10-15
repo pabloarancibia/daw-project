@@ -8,26 +8,29 @@
 
 //=======[ Settings, Imports & Data ]==========================================
 
-var PORT    = 3000;
+var PORT = 3000;
 
 var express = require('express');
-var app     = express();
-var mysql   = require('./mysql-connector');
+var app = express();
+var mysql = require('./mysql-connector');
 
 // to parse application/json
-app.use(express.json()); 
+app.use(express.json());
 // to serve static files
 app.use(express.static('/home/node/app/static/'));
 
 //=======[ Main module code ]==================================================
 
-app.get('/devices/', function(req, res, next) {
+app.get('/devices/', function (req, res, next) {
     response = "{ 'key1':'value1' }"
     res.send(JSON.stringify(response)).status(200);
 });
 
-app.listen(PORT, function(req, res) {
+app.listen(PORT, function (req, res) {
     console.log("NodeJS API running correctly");
 });
 
+
+let persona = require('./datos.js');
+console.log(persona.nombre + '' + persona.apellido);
 //=======[ End of file ]=======================================================
