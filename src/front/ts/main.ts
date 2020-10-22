@@ -40,7 +40,7 @@ class Main implements EventListenerObject, GETResponseListener, POSTResponseList
 
         this.myf.configEventLister("click", "boton", this);
 
-        this.myf.requestGET("Devices.txt", this);
+        this.myf.requestGET("http://localhost:8000/dispositivos", this);
 
 
     }
