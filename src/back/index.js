@@ -33,12 +33,11 @@ app.listen(PORT, function (req, res) {
     console.log("NodeJS API running correctly");
 });
 
-let persona = require('./datos.js');
-console.log(persona.nombre + ' ' + persona.apellido);
 
+// PUNTOS DEL TRABAJO PRACTICO
+//Se guardó el cógido utilizado previamente con json.
 
-
-// punto 3 Crear una variable en la API y asignarle todo el json del archivo “datos.json”
+// Punto 3 Crear una variable en la API y asignarle todo el json del archivo “datos.json”
 // let datosJson = require('./datos.json');
 // console.log(datosJson);
 
@@ -55,7 +54,6 @@ app.get('/dispositivos/', function (req, res, next) {
         res.send(respuesta);
     });
 });
-
 
 
 //5)Crear un método GET que reciba por parámetro un id y devuelva un JSON con el
@@ -96,6 +94,7 @@ app.post('/dispositivos/', function (req, res, next) {
 
 });
 
+// AGREGAR DISPOSITIVOS A LA BASE DE DATOS
 app.post('/dispositivos/agregar/', function (req, res, next) {
     mysql.query('INSERT INTO devices (name,description,state,type) VALUES (?,?,?,?)', [req.body.nombre, req.body.descripcion, 0, req.body.tipo], function (err, respuesta) {
         if (err) {
@@ -107,8 +106,8 @@ app.post('/dispositivos/agregar/', function (req, res, next) {
 
 });
 
+// ELIMINAR DISPOSITIVO DE LA BASE DE DATOS
 app.post('/dispositivos/eliminar/', function (req, res, next) {
-    console.log(req.body);
     mysql.query('DELETE FROM devices WHERE id=?', [req.body.id], function (err, respuesta) {
         if (err) {
             res.send(err).status(400);
