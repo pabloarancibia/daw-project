@@ -23,7 +23,11 @@ class ViewMainPage {
                                 <img src="static/images/${image}" alt="" class="circle">
                                 <span class="title">${dev.name}</span>
                                 <p>${dev.description}</p>
-                                <a href="#!" class="secondary-content">
+                                
+                                <div class=" row secondary-content">
+
+                                <div class="col s7">
+                                <a href="#!" >
                                     <div class="switch">
                                         <label>
                                         Off
@@ -33,7 +37,21 @@ class ViewMainPage {
                                         </label>
                                     </div>
                                 </a>
-                            </li>`;
+                                </div>
+
+                                <div class="col s5">
+                                <a id="eliminar_${dev.id}" 
+                                class="waves-effect waves-light btn-small red">
+                                Eliminar
+                                </a>
+                                </div>
+
+                                </div>
+ 
+                            </li>
+                            
+                            
+                            `;
         }
     }
 

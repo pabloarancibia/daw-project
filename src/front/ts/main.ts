@@ -1,10 +1,3 @@
-/*=============================================================================
- * Authors: Agustin Bassi, Brian Ducca, Santiago Germino 
- * Date: Jul 2020
- * Licence: GPLV3+
- * Project: DAW - CEIoT - Project Structure
- * Brief: Main frontend file (where the logic is)
-=============================================================================*/
 interface DeviceInt {
     id: number;
     name: string;
@@ -20,77 +13,86 @@ class Main implements EventListenerObject, GETResponseListener, POSTResponseList
     counter: number = 0;
 
     main(): void {
-        console.log("estoy en main()");
-
-        let usuarios: Array<User>;
-        usuarios = new Array<User>();
-        usuarios.push(new User(1, "Agustin", "agustin@gmail.com"));
-        usuarios.push(new User(2, "Brian", "brian@gmail.com"));
-        usuarios.push(new User(3, "Santiago", "santiago@gmail.com"));
-
-        this.mostrarUsers(usuarios);
 
         this.myf = new MyFramework();
         this.view = new ViewMainPage(this.myf);
-
-        // Esto se implementa en MyFramework.configEventListener
-        // -----------------------------------------------------
-        // let b:HTMLElement = document.getElementById ("boton");
-        // b.addEventListener ("click", this);
-
-        this.myf.configEventLister("click", "boton", this);
-
+        this.myf.configEventLister("click", "agregar", this);
         this.myf.requestGET("http://localhost:8000/dispositivos", this);
 
-
     }
 
-    mostrarUsers(users: Array<User>): void {
-
-        for (let o of users) {
-            o.printInfo();
-        }
-    }
-
+    // Escucho eventos
     handleEvent(evt: Event): void {
-        console.log(`se hizo "${evt.type}"`);
 
+        // tomo el elemento que produjo el evento
         let b: HTMLElement = this.myf.getElementByEvent(evt);
-        console.log(b);
 
-        if (b.id == "boton") {
-            this.counter++;
-            b.textContent = `Click ${this.counter}`;
+        // si id comienza con eliminar, ejecuto el post
+        if (b.id.slice(0, 8) == 'eliminar') {
+
+            let id: string = b.id.slice(9);
+            let data = { "id": id };
+            console.log(data);
+            this.myf.requestPOST('http://localhost:8000/dispositivos/eliminar/', data, this);
+            location.reload();
         }
-        else {
+        // si id es agregar envio post
+        if (b.id == 'agregar') {
+
+            let nombre = (<HTMLInputElement>this.myf.getElementById('nombre')).value;
+            let descripcion = (<HTMLInputElement>this.myf.getElementById('descripcion')).value;
+            let lampara = (<HTMLInputElement>this.myf.getElementById('lampara'));
+            let tipo = 0;
+            if (lampara.checked) {
+                tipo = 0;
+            } else {
+                tipo = 1;
+            }
+            let data = { "nombre": nombre, "descripcion": descripcion, 'tipo': tipo };
+            this.myf.requestPOST("http://localhost:8000/dispositivos/agregar/", data, this);
+            location.reload();
+
+        }
+
+        // si id comienza con dev es cambio estado
+        if (b.id.slice(0, 3) == 'dev') {
             let state: boolean = this.view.getSwitchStateById(b.id);
-
-            let data = { "id": `${b.id}`, "state": state };
-            this.myf.requestPOST("https://cors-anywhere.herokuapp.com/https://postman-echo.com/post", data, this);
+            let id: string = b.id.slice(4);
+            let data = { "id": id, "state": state };
+            this.myf.requestPOST("http://localhost:8000/dispositivos/", data, this);
         }
+
+
     }
 
+    // interface escucha GET
     handleGETResponse(status: number, response: string): void {
         console.log("Respuesta del servidor: " + response);
 
+        // carga en data la lista de dispositivos
         let data: Array<DeviceInt> = JSON.parse(response);
 
         console.log(data);
 
+        // llama a la funcion showDevices con la lista como parámetro
         this.view.showDevices(data);
 
+        // 'escucha' a todos los dispositivos para cuando se produzca un evento click 
         for (let d of data) {
             let b: HTMLElement = this.myf.getElementById(`dev_${d.id}`);
             b.addEventListener("click", this);
+
+            let e: HTMLElement = this.myf.getElementById(`eliminar_${d.id}`);
+            e.addEventListener("click", this);
         }
     }
 
+    // interface escucha POST
     handlePOSTResponse(status: number, response: string): void {
         console.log(status);
         console.log(response);
     }
 }
-
 
 window.onload = () => {
     let m: Main = new Main();
@@ -103,14 +105,6 @@ window.onload = () => {
 let user = "TypesScript Users!";
 
 //=======[ Main module code ]==================================================
-
-function greeter(person) {
-    return "Hello, " + person;
-}
-
-// document.body.innerHTML = greeter(user);
-
-console.log("Hola mundo!");
 
 
 //=======[ End of file ]=======================================================

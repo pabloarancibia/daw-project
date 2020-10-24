@@ -3,7 +3,7 @@
         "id": 1,
         "name": "Lámpara 1",
         "description": "Luz Living",
-        "state": 1,
+        "state": 0,
         "type": 0
     },
     {

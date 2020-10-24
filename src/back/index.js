@@ -91,8 +91,30 @@ app.post('/dispositivos/', function (req, res, next) {
             res.send(err).status(400);
             return;
         }
-        // res.send('respuesta' + (JSON.stringify(respuesta)).status(200));
         res.send('update ok');
+    });
+
+});
+
+app.post('/dispositivos/agregar/', function (req, res, next) {
+    mysql.query('INSERT INTO devices (name,description,state,type) VALUES (?,?,?,?)', [req.body.nombre, req.body.descripcion, 0, req.body.tipo], function (err, respuesta) {
+        if (err) {
+            res.send(err).status(400);
+            return;
+        }
+        res.send('Insert ok');
+    });
+
+});
+
+app.post('/dispositivos/eliminar/', function (req, res, next) {
+    console.log(req.body);
+    mysql.query('DELETE FROM devices WHERE id=?', [req.body.id], function (err, respuesta) {
+        if (err) {
+            res.send(err).status(400);
+            return;
+        }
+        res.send('Delete ok');
     });
 
 });
