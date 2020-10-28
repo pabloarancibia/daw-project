@@ -31,6 +31,7 @@ Ejecutar:
 ```
 docker-compose up
 ```
+* en caso de no levantar mysql, por única vez deberas reiniciar el servicio de Node.js
 
 Ingresa en tu navegador a http://localhost:8000/
 
